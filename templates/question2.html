@@ -1,0 +1,12 @@
+{%  include 'common.html' %}
+
+<form action="/queryDB" method="post">
+    number of queries: <input type="text" name="qcount">
+    lower Magnitude: <input type="text" name="lmag">
+    higher Magnitude: <input type="text" name="hmag">
+
+    <input type="submit" name= "form" value="Execute" />
+    <input type="submit" name= "form" value="ExecuteCache" />
+</form>
+
+<embed type="image/svg+xml" src= {{ chart|safe }} />

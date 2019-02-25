@@ -1,0 +1,30 @@
+{%  include 'common.html' %}
+
+<form action="/question1_execute" method="get">
+    Enter magnitude<input type="text" name="mag" method="get" >
+    Enter type of operation: <select name="oper">
+                      <option value="<"><</option>
+                      <option value=">">></option>
+                      <option value="=">=</option>
+                    </select>
+    <input type="submit" name="form" value="Execute">
+    <input type="submit" name= "form" value="ExecuteCache" />
+</form>
+
+
+{% if result==None %}
+    <p>Inserted in Redis Cache for faster access next time</p>
+{#    #}
+{% endif %}
+
+
+{% if result and total_time %}
+    <p>Count</p>
+    <h1> {{result}} </h1>
+    <p>Time Taken</p>
+    <h1> {{total_time}} </h1>
+{#    #}
+{% endif %}
+
+
+{#<embed type="image/svg+xml" src= {{ chart|safe }} />#}
