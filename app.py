@@ -139,6 +139,34 @@ def question3_execute():
         result = "error try again"
     return render_template('question3.html', result=result)
 
+
+
+@app.route('/question4', methods=['GET'])
+def question4():
+    return render_template('question4.html',)
+
+@app.route('/question4_execute', methods=['GET'])
+def question4_execute():
+    # year = str(request.args.get('year'))
+    # year = 'y_' + year
+    stc = request.args.get('stc')
+
+    try:
+        #startTime = time.perf_counter()
+        # while qcount != 0:
+        sql = "select count(county), counties.state from counties INNER JOIN statecode on counties.state = statecode.state where state_code = " + "'"+ str(stc) + "'" + " GROUP BY counties.state"
+        sql2 = "select counties.county from counties inner join statecode on counties.state = statecode.state where statecode.state_code = " + "'"+ str(stc) + "'"
+        cursor = conn.cursor()
+        result = cursor.execute(sql).fetchall()
+        result2 = cursor.execute(sql2).fetchall()
+        print(result2)
+        #qcount = qcount - 1
+        #endTime = time.perf_counter()
+        #total_time = endTime - startTime
+    except:
+        result = "error try again"
+    return render_template('question4.html', result=result, result2 = result2)
+
 @app.route('/clear_redis_execute', methods=['GET'])
 def clear_redis_execute():
     r.flushdb()
