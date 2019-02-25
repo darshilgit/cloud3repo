@@ -195,6 +195,40 @@ def question5_execute():
         result = "error try again"
     return render_template('question5.html', result=result)
 
+@app.route('/question6', methods=['GET'])
+def question6():
+    return render_template('question6.html',)
+
+@app.route('/question6_execute', methods=['GET'])
+def question6_execute():
+    qcount = request.args.get('qcount')
+    qcount = int(qcount)
+    year = str(request.args.get('year'))
+    year = 'y_' + year
+    lpop = str(request.args.get('lpop'))
+    hpop = str(request.args.get('hpop'))
+    try:
+        if request.args.get('form') == 'no':
+            startTime = time.perf_counter()
+            while qcount != 0:
+                sql = "select population." + year + " from population where " + year + " BETWEEN" + "'" + lpop + "'" + " and " "'" + hpop + "'"
+                cursor = conn.cursor()
+                result = cursor.execute(sql).fetchall()
+                qcount = qcount - 1
+            endTime = time.perf_counter()
+            total_time = endTime - startTime
+        elif request.args.get('form') == 'yes':
+            startTime = time.perf_counter()
+            while qcount != 0:
+                sql = "select population." + year + " from population where " + year + " BETWEEN" + "'" + lpop + "'" + " and " "'" + hpop + "'"
+                result = redis_query(sql)
+                qcount = qcount - 1
+            endTime = time.perf_counter()
+            total_time = endTime - startTime
+    except:
+        result = "error try again"
+    return render_template('question6.html', total_time=total_time)
+
 @app.route('/clear_redis_execute', methods=['GET'])
 def clear_redis_execute():
     r.flushdb()
