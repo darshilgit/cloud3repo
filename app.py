@@ -167,6 +167,34 @@ def question4_execute():
         result = "error try again"
     return render_template('question4.html', result=result, result2 = result2)
 
+@app.route('/question5', methods=['GET'])
+def question5():
+    return render_template('question5.html',)
+
+@app.route('/question5_execute', methods=['GET'])
+def question5_execute():
+    year = str(request.args.get('year'))
+    year = 'y_' + year
+    lpop = str(request.args.get('lpop'))
+    hpop = str(request.args.get('hpop'))
+    print(year)
+    print(lpop)
+    print(hpop)
+    try:
+        #startTime = time.perf_counter()
+        # while qcount != 0:
+        sql = "select population."+ year +" from population where " + year + " BETWEEN" + "'" +lpop + "'" + " and " "'" + hpop + "'"
+        print(sql)
+        cursor = conn.cursor()
+        result = cursor.execute(sql).fetchall()
+
+        #qcount = qcount - 1
+        #endTime = time.perf_counter()
+        #total_time = endTime - startTime
+    except:
+        result = "error try again"
+    return render_template('question5.html', result=result)
+
 @app.route('/clear_redis_execute', methods=['GET'])
 def clear_redis_execute():
     r.flushdb()
