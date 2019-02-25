@@ -3,6 +3,7 @@ import pyodbc as db
 import redis
 import pygal
 import time
+import random
 
 app = Flask(__name__)
 conn = db.connect("Driver={ODBC Driver 17 for SQL Server};Server=tcp:cloud3dbserver.database.windows.net,1433;Database=cloud3db;Uid=dbuser@cloud3dbserver;Pwd={Mypassword!};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
@@ -55,23 +56,24 @@ def query_db_execute():
 
     try:
         # if mag != '' and oper != '':
-        cursor = conn.cursor()
         # sql = '''SELECT COUNT(*) FROM QUIZ2TABLE where "mag" < ? '''
         #         # cursor.execute(sql, (mag,))
         sql = "SELECT COUNT(*) FROM quakes where mag " + oper + mag
-        if request.args.get('form') == 'Execute':
+        if request.args.get('form') == 'no':
             startTime = time.perf_counter()
+            cursor = conn.cursor()
             cursor.execute(sql)
             result = cursor.fetchall()
             endTime = time.perf_counter()
             result = result[0][0]
             total_time = endTime-startTime
-        elif request.args.get('form') == 'ExecuteCache':
+        elif request.args.get('form') == 'yes':
             startTime = time.perf_counter()
             result = redis_query(sql)
             endTime = time.perf_counter()
             if result != None:
                 result = str(result)
+                result = result.replace("'",'')
                 result = result.split('b')
                 result = result[-1]
             total_time = endTime - startTime
@@ -82,7 +84,37 @@ def query_db_execute():
     return render_template('question1.html', result=result, total_time=total_time)
 
 
+@app.route('/question2', methods=['GET'])
+def query_db_2():
+    return render_template('question2.html', )
 
+@app.route('/question2_execute', methods=['GET'])
+def query_db_2_execute():
+    qcount = request.args.get('qcount')
+    qcount = int(qcount)
+    lmag = float(request.args.get('lmag'))
+    hmag = float(request.args.get('hmag'))
+    try:
+        if request.args.get('form') == 'no':
+            startTime = time.perf_counter()
+            while qcount != 0:
+                sql = "SELECT COUNT(*) FROM quakes where mag =" + str(round(random.uniform(lmag, hmag), 1))
+                cursor = conn.cursor()
+                result = cursor.execute(sql).fetchall()
+                qcount = qcount - 1
+            endTime = time.perf_counter()
+            total_time = endTime - startTime
+        elif request.args.get('form') == 'yes':
+            startTime = time.perf_counter()
+            while qcount != 0:
+                sql = "SELECT COUNT(*) FROM quakes where mag =" + str(round(random.uniform(lmag, hmag), 1))
+                result = redis_query(sql)
+                qcount = qcount - 1
+            endTime = time.perf_counter()
+            total_time = endTime - startTime
+    except:
+        result = "error try again"
+    return render_template('question2.html', total_time=total_time)
 
 if __name__ == '_main_':
     app.run()

@@ -1,12 +1,21 @@
 {%  include 'common.html' %}
 
-<form action="/queryDB" method="post">
+<form action="/question2_execute" method="get">
     number of queries: <input type="text" name="qcount">
     lower Magnitude: <input type="text" name="lmag">
     higher Magnitude: <input type="text" name="hmag">
-
-    <input type="submit" name= "form" value="Execute" />
-    <input type="submit" name= "form" value="ExecuteCache" />
+    with cache?: <select name="form">
+                      <option value="no">no</option>
+                      <option value="yes">yes</option>
+                    </select>
+    <input type="submit" value="Execute" />
+{#    <input type="submit" name= "form" value="ExecuteCache" />#}
 </form>
 
-<embed type="image/svg+xml" src= {{ chart|safe }} />
+
+{% if total_time %}
+    <p>Time Taken</p>
+    <h1> {{total_time}} </h1>
+{#    #}
+{% endif %}
+{#<embed type="image/svg+xml" src= {{ chart|safe }} />#}
