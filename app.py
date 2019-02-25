@@ -116,9 +116,47 @@ def query_db_2_execute():
         result = "error try again"
     return render_template('question2.html', total_time=total_time)
 
+@app.route('/question3', methods=['GET'])
+def question3():
+    return render_template('question3.html',)
+
+@app.route('/question3_execute', methods=['GET'])
+def question3_execute():
+    year = str(request.args.get('year'))
+    year = 'y_' + year
+    stc = request.args.get('stc')
+    try:
+        #startTime = time.perf_counter()
+        # while qcount != 0:
+        sql = "SELECT population."+ year + " FROM population INNER JOIN statecode on population.State = statecode.state where state_code =" + "'" +str(stc)+"'"
+        print(sql)
+        cursor = conn.cursor()
+        result = cursor.execute(sql).fetchall()
+        #qcount = qcount - 1
+        #endTime = time.perf_counter()
+        #total_time = endTime - startTime
+    except:
+        result = "error try again"
+    return render_template('question3.html', result=result)
+
+@app.route('/clear_redis_execute', methods=['GET'])
+def clear_redis_execute():
+    r.flushdb()
+    print('flushed')
+    return render_template('question2.html')
 if __name__ == '_main_':
     app.run()
 
 
 # darshil_parikh@Azure:/usr/local/lib/python2.7/dist-packages$ pip install pyodbc --user
 # az webapp config set --resource-group appsvc_rg_Linux_centralus --name cloud3app --linux-fx-version "PYTHON|3.5"
+# SELECT population.y_2010, population.State
+# FROM population
+# INNER JOIN statecode
+# ON population.State = statecode.state
+# WHERE state_code = 'CA';
+
+# SELECT population.y_2010
+# FROM population
+# INNER JOIN counties on counties.state = population.State
+# WHERE counties.state = 'California' and counties.county='San Francisco'

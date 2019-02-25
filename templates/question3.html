@@ -1,0 +1,17 @@
+{%  include 'common.html' %}
+
+<form action="/question3_execute" method="get">
+    year: <input type="text" name="year">
+    state code: <input type="text" name="stc">
+    <input type="submit" value="Execute" />
+{#    <input type="submit" name= "form" value="ExecuteCache" />#}
+</form>
+
+
+{% if result %}
+
+    <h1> {{result[0][0]}} </h1>
+    
+{#    #}
+{% endif %}
+{#<embed type="image/svg+xml" src= {{ chart|safe }} />#}
