@@ -6,12 +6,12 @@ import time
 import random
 
 app = Flask(__name__)
-conn = db.connect("Driver={ODBC Driver 17 for SQL Server};Server=tcp:cloud3dbserver.database.windows.net,1433;Database=cloud3db;Uid=dbuser@cloud3dbserver;Pwd={Mypassword!};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
+conn = db.connect("Driver={ODBC Driver 17 for SQL Server};Server=tcp:cloud3dbserver.database.windows.net,1433;Database=cloud3db;Uid=dbuser@cloud3dbserver;Pwd={insert db password here};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
 redis_connect_dict = {}
 redis_connect_dict['host'] = 'cloud3redis.redis.cache.windows.net'
 redis_connect_dict['port'] = 6380
 redis_connect_dict['db'] = 0
-redis_connect_dict['password'] = 'iMB7hsBunvCnYzZPekiBk+ZAX3TzDKzDplY+Pc8Y2+s='
+redis_connect_dict['password'] = 'insert redis password here'
 
 r = redis.StrictRedis(redis_connect_dict['host'],
                       redis_connect_dict['port'],
@@ -19,9 +19,6 @@ r = redis.StrictRedis(redis_connect_dict['host'],
                       redis_connect_dict['password'],
                       ssl=True)
 
-line_chart = pygal.Bar()
-line_chart.add('a', [1, 2])
-line_chart.add('b', [1, 3])
 
 
 def redis_query(query):
@@ -224,7 +221,8 @@ def question6_execute():
                 result = redis_query(sql)
                 qcount = qcount - 1
             endTime = time.perf_counter()
-            total_time = endTime - startTime
+            total_time = (endTime - startTime)/100
+
     except:
         result = "error try again"
     return render_template('question6.html', total_time=total_time)
